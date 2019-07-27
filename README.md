@@ -6,10 +6,12 @@ Layout](https://openjdk.java.net/projects/code-tools/jol) (JOL)
 library, intended to support slightly more accurate Java object
 walking than JOL.
 
+
 ## Usage
 
-Currently this small library is only deployed in order to use it
-within the Clojure [`cljol`
+Currently this small library is only [deployed to
+Clojars.org](https://clojars.org/com.fingerhutpress.cljol_jvm_support/cljol_jvm_support)
+in order to use it within the Clojure [`cljol`
 tool](https://github.com/jafingerhut/cljol).  Its API is expected to
 change without warning across versions, based upon whatever seems
 useful when using it within `cljol`.
@@ -31,6 +33,7 @@ Deploy to Clojars.org:
 ```bash
 $ lein deploy clojars
 ```
+
 
 ## License
 
