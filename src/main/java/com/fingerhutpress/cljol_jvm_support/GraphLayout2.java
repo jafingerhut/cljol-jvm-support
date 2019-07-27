@@ -32,7 +32,7 @@ import org.openjdk.jol.vm.VM;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 /**
  * Holds the object graph layout info.
@@ -71,11 +71,11 @@ public class GraphLayout2 {
      * this method does, and is thus less likely to trigger a garbage
      * collection run.
      *
-     * @param stop null gives the default behavior of walking all references of all objects.  By supplying a Predicate, every time the walk reaches an object o, it will call the stop.test(o) predicate, and avoid following any references out of o to other objects.
+     * @param customFieldHandling null gives the default behavior of walking all references of all objects.  By supplying a Function, every time the walk reaches an object o, it will call the custom.apply(o) method, which should return either nil, meaning to follow all references, or a Map object m.  If m has a key "only-fields-in-set", its associated value should be a set of strings.  In that case, only fields with those field names will be followed.  Otherwise, if m has a key "never-fields-in-set", its assocaited value should be a set of strings.  In that case, fields with those field names will not be followed, but all others will.
      * @param roots root instances to start from
      * @return object graph
      */
-    public static GraphLayout2 parseInstanceIds(Predicate<Object> stop,
+    public static GraphLayout2 parseInstanceIds(Function<Object,Object> customFieldHandling,
 						Object... roots) {
         if (roots == null) {
             throw new IllegalArgumentException("Roots are null");
@@ -88,7 +88,7 @@ public class GraphLayout2 {
         GraphLayout2 data = new GraphLayout2(roots);
         GraphWalker2 walker = new GraphWalker2(roots);
         walker.addVisitor(data.visitorById());
-        walker.walk(stop);
+        walker.walk(customFieldHandling);
 	/*
         if (data.createAddressSnapshot(1)) {
             data.createAddressMap();
